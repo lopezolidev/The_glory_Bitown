@@ -1,107 +1,42 @@
 #include <iostream>
-#include <string>
+
+//No usamos string muchachos...
 
 using namespace std;
 
-int parser(string array, bool op){
-    int arr[2];
-    int n_1;
-    int n_2;
-
-    int pos = array.find(' ');
-
-    n_1 = stoi(array.substr(0, pos));
-    n_2 = stoi(array.substr(pos + 1));
-
-    arr[0] = n_1;
-    arr[1] = n_2;
-
-    if(op) return arr[0];
-    return arr[1];
-
-    // cout << "arr[0] " << arr[0] << endl;
-    // cout << "arr[1] " << arr[1] << endl;
-
-    return 0;
-}
-
-char** createMat(int filas, int columnas) {
-    char** matriz = new char*[filas]; // Crear un arreglo de punteros a chars
-
-    for (int i = 0; i < filas; i++) {
-        matriz[i] = new char[columnas]; // Crear un arreglo de chars para cada fila
-    }
-
-    return matriz;
-}
-
-void fillMat(char** mat, int rows, int cols){
-    int i = 0;
-    while(i < rows){
-        int j = 0;
-        while(j < cols){
-            int value = i + j;
-            string strValue = to_string(value);
-            mat[i][j] = strValue[0];
-            j++;
-        }
-        i++;
-    }
-}
-
-void printMat(char** mat, int rows, int cols){
-    int i = 0;
-    while(i < rows){
-        int j = 0;
-        while(j < cols){
-            cout << mat[i][j] << " ";
-            j++;
-        }
-        cout << endl;
-        i++;
-    }
-}
-
 int main(){
 
-    int vit = 0;
-    char type[2];
-    int dungeons = 0;
-    string dimensions;
-    string dung_conf = "";
+    char c; //solo un caracter será nuestro elemento de lectura
 
-    cout << "insert vitality: " << endl;
-    cin >> vit;
-    cout << endl;
+    cout << "Insert number of rows and columns" << endl;
+    int a, b;
 
-    cout << "Insert type of warrior " << endl;
-    cin >> type;
-    cout << endl;
+    //columnas y filas
 
-    cout << "Insert number of dungeons " << endl;
-    cin >> dungeons;
-    cout << endl;
+    cin >> a >> b;
 
+    //insertamos columnas y filas. No importan los espacios en blanco
 
+    cout << "rows: " << a << " columns: " << b << endl;
 
-    cout << "vitality: " << vit << endl;
-    cout << "type: " << type << endl;
-    cout << "dungeons: " << dungeons << endl;
+    //mostramos filas y columnas
 
-    cout << "Matrix " << endl;
-    cout << "Insert dimensions of dungeon " << endl;
-    cin.ignore();
-    getline(cin, dimensions);
-    cout << endl;
+    int i = 0;
+    //elemento iterador, nos dirá hasta cuando iterar por la línea (columnas)
 
-    int rows = parser(dimensions, true);
-    int cols = parser(dimensions, false);
+    while(i < b){   // La magia...
+        cin >> c;
+        // este caracter se podrá mover por toda  la fila
 
-    char** matx = createMat(rows, cols);
-    fillMat(matx, rows, cols);
-    printMat(matx, rows, cols);
-
-    cout << "dimensions: " << rows << " " << cols << endl; 
+        if(c != ' '){ 
+            //si el caracter es vacío no mostramos ni contamos esa entrada como válida (no aumentamos el iterador)
+            i++;
+            cout << c << endl;
+            //mostramos en pantalla lo que escribamos
+        } 
+    }
 
     return 0;
 }
+
+// And that's it...
