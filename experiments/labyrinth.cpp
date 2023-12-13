@@ -2,15 +2,7 @@
 
 using namespace std;
 
-bool validar(char x, char y){
-    bool b = false;
-    if(!((x < 0 || x > 9) || (y < 0 || y > 9))){
-        b = true;
-    }
-    return b;
-}
-
-int posXE(char M[][10][3]){
+int posYE(char M[][10][3]){
     int i= 0;
     while(i < 10){
         int j = 0;
@@ -26,7 +18,7 @@ int posXE(char M[][10][3]){
 }
 
 
-int posYE(char M[][10][3]){
+int posXE(char M[][10][3]){
     int i= 0;
     while(i < 10){
         int j = 0;
@@ -41,7 +33,7 @@ int posYE(char M[][10][3]){
     return -1;
 }
 
-int posXS(char M[][10][3]){
+int posYS(char M[][10][3]){
     int i= 0;
     while(i < 19){
         int j = 0;
@@ -57,7 +49,7 @@ int posXS(char M[][10][3]){
 }
 
 
-int posYS(char M[][10][3]){
+int posXS(char M[][10][3]){
     int i= 0;
     while(i < 10){
         int j = 0;
@@ -72,9 +64,43 @@ int posYS(char M[][10][3]){
     return -1;
 }
 
+int mov[4][2] = {{-1, 0},{0, 1},{1, 0},{0, -1}};
 
-void backtracking(char***& matrix, char c){
+/*
+mov[4][2] = 
+{
+    {-1, 0},    UP
+    {0 , 1},    RIGHT
+    {1,  0},    DOWN
+    {0, -1}     LEFT
+}
+*/
 
+bool valido(int* fila, int posX, int posY, char M[][10][3]){
+    int movX = fila[1];
+    int movY = fila[0];
+
+    bool b = false;
+
+    if(!((movX + posX < 0 || movX + posX > 9) || (movY + posY < 0 || movY + posY > 9) || M[movY + posY][movX + posX][0] == '*')){
+        b = true;
+    }
+
+    return b;
+} // funcion validar → asegurando que la celda es valida para cruzar
+
+void backtracking(char M[][10][3], int posX, int posY, int sX, int sY){
+    if(M[posX][posY][0] == 'S'){
+        cout << "Salida!" << endl;
+        return;
+    }
+    int i = 0;
+    while(i < 4){
+        if(valido(mov[i], posX, posY, M)){
+
+        }
+        i++;
+    }
 }
 
 int main(){
@@ -199,6 +225,17 @@ int main(){
 
     cout << "Position in (x,y) of the Entrance: " << "( "<< posXE(M) << " , " << posYE(M) << " )" << endl;
     cout << "Position in (x,y) of the Exit: " << "( "<< posXS(M) << " , " << posYS(M) << " )" << endl; 
+
+    cout << endl << endl;
+
+
+
+    cout << "Is valid the movement UP? ";
+    if(valido(mov[2], posXE(M), posYE(M), M)){
+        cout << "Yes";
+    }else{
+        cout << "No";
+    }
 
     return 0;
 }
