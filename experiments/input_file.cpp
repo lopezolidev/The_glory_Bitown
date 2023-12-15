@@ -37,11 +37,11 @@ class PJ {
 
 class player : public PJ{
     public: 
-        bool type = 0;
+        bool type = false;
         int attack[2][4] = {{0, 0, 0, 0}, {0, 0, 0, 0}};
         player(int v, bool t){
             vit = v;
-            if(!t){     // 0 → LUCHADOR
+            if(!type){     // 0 → LUCHADOR
                 type = t;
             } else {    // 1 → ARQUERO
                 type = t;

@@ -157,7 +157,7 @@ void backtracking(char M[][10][3], int posY, int posX, bool& b){
             backtracking(M, posY + movF, posX + movC, b);  // ejecutamos llamada recursiva de backtracking
             if(b == true){
                 break;
-            }
+            }   // cuando lleguemos a la solución detenemos todos los ciclos para finalizar las llamadas recursivas
 
             marcar(M, elemento, posX, posY);    // regresamos el movimiento anterior
             
