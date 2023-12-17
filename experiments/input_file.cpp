@@ -353,10 +353,11 @@ void worldCreator(){
 
     //  cout << "rows: " << rows << ", cols: " << cols << endl;
 
-}   // esta función crea la matriz, la cual es enviada a una función de Game la cual es central para imprimir los resultados por pantalla que se solicitan en el documento del proyecto
+}   
+// esta función crea la matriz, la cual es enviada a una función de Game la cual es central para imprimir los resultados por pantalla que se solicitan en el documento del proyecto
 
 
-void dataEntry(){
+player dataEntry(){
     player p(0, false);
 
     p.vit = vitalityEntry();
@@ -371,16 +372,21 @@ void dataEntry(){
         cout << "Luchador";
     }
     cout << endl;   // LIMPIAR
+
+    return p;
 }
 // función para ingresar los datos del jugador
 
 int main(){
 
-    dataEntry();
+    player p = dataEntry();
     int q = dungeonsQuant();
     int k = 0;
+    int vit = p.vit; // variable auxiliar que guarda la vitalidad con la que el jugador entró por primera vez al conjunto de mazmorras
     while(k < q){
         cout << "dungeon N°: " << k + 1 << endl;
+        p.vit = vit; // haciendo "reset" de la vida del jugador
+
         worldCreator();
         k++;
     }

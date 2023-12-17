@@ -33,37 +33,6 @@ int posXE(char M[][10][3]){
     return -1;
 }
 
-// int posYS(char M[][10][3]){
-//     int i= 0;
-//     while(i < 19){
-//         int j = 0;
-//         while(j < 10){
-//                 if(M[i][j][0] == 'S'){
-//                     return i;
-//                 }
-//             j++;
-//         }
-//         i++;
-//     }
-//     return -1;
-// }
-
-
-// int posXS(char M[][10][3]){
-//     int i= 0;
-//     while(i < 10){
-//         int j = 0;
-//         while(j < 10){
-//                 if(M[i][j][0] == 'S'){
-//                     return j;
-//                 }
-//             j++;
-//         }
-//         i++;
-//     }
-//     return -1;
-// }
-
 int mov[4][2] = {{-1, 0},{0, 1},{1, 0},{0, -1}};
 
 /*
@@ -77,13 +46,22 @@ mov[4][2] =
 */
 
 bool valido(int* fila, int posY, int posX, char M[][10][3], int& enemy_counter){
-    
+    // cout << "enemy counter" << enemy_counter << endl;
+
     int movY = fila[0];
     int movX = fila[1];
 
-// M[posY + movY][posX + movX][0] == 'G'
-
     bool b = false;
+
+    // if((posY + movY) == 7 && (posX + movX) == 8){
+    //     if(M[posY + movY][posX + movX][0] == 'G'){
+            
+    //         cout << "giant " << endl;
+    //         enemy_counter++;
+    //         cout << "enemy_counter " << enemy_counter << endl;
+    //     }
+    //     cout << "M[7][8][0] " << M[7][8][0] << endl;
+    // }
 
     // Corregir las condiciones para validar la celda
     if (!(posY + movY < 0 || posY + movY >= 10 || posX + movX < 0 || posX + movX >= 10 ||
@@ -96,16 +74,22 @@ bool valido(int* fila, int posY, int posX, char M[][10][3], int& enemy_counter){
                 
                 b = true;
 
-    }else if(M[posY + movY][posX + movX][0] == 'O' || M[posY + movY][posX + movX][0] == 'M'){
+    }
+    if(M[posY + movY][posX + movX][0] == 'O' || M[posY + movY][posX + movX][0] == 'M'){
             // caso cuando es un enemigo transitable
         
-        // enemy_counter++;
-        // M[posY + movY][posX + movX][0] = '.';
+        enemy_counter++;
+        M[posY + movY][posX + movX][0] = '.';   // marcamos la matriz para no contar dos veces ese enemigo
         b = true;       
+        cout << "enemy_counter " << enemy_counter << endl;
 
-    } 
-    // cout << "enemy counter: " << enemy_counter << endl;
-
+    }
+    if( M[posY + movY][posX + movX][0] == 'G'){
+        enemy_counter++;
+        M[posY + movY][posX + movX][0] = '*';   // lo mismo para el caso del gigante
+        b = false;
+        cout << "enemy_counter " << enemy_counter << endl;
+    }
     return b;
 
 } // funcion validar → asegurando que la celda es valida para cruzar → más adelante implementarse con combate
@@ -159,9 +143,13 @@ void backtracking(char M[][10][3], int posY, int posX, bool& b, int& enemy_count
 
             marcar(M, marca, posX, posY);   // marcamos esa celda de la matriz, la celda donde estamos indicamos la direccion que tomamos
 
+            cout << endl;
+            printMatriz(M);
+            cout << endl;   // imprimimos antes de los pasos recursivos
+
             if(M[posY + movF][posX + movC][0] == 'M' || M[posY + movF][posX + movC][0] == 'O' || M[posY + movF][posX + movC][0] == 'G'){
-                enemy_counter++;
-                cout << "killed enemy!"<<endl; 
+                // enemy_counter++;
+                // cout << "killed enemy!"<<endl; 
             }   // si llega a conseguirse a algún enemigo aumenta el contador de enemigos encontrados, que sería lo mismo a enemigos peleados
 
             // if(posY == 3 && posX == 6) cout << "CORNER " << endl;
@@ -174,9 +162,6 @@ void backtracking(char M[][10][3], int posY, int posX, bool& b, int& enemy_count
             marcar(M, elemento, posX, posY);    // regresamos el movimiento anterior
             
             // Comenta estas líneas si no necesitas ver los pasos intermedios
-            cout << endl;
-            printMatriz(M);
-            cout << endl;
         }
         i++;
     }
@@ -340,6 +325,10 @@ int main(){
 
         ATENCIÓN 
     */  
+
+    //tapando la salida con un gigante
+    M[7][8][0] = 'G';
+
 
     
     //preguntamos cuantos enemigos hay:
