@@ -7,7 +7,7 @@ int posYE(char M[][10][3]){
     while(i < 10){
         int j = 0;
         while(j < 10){
-                if(M[i][j][0] == 'E'){
+                if(M[i][j][0] == 'P' && M[i][j][1] == 'E'){
                     return i;
                 }
             j++;
@@ -23,7 +23,7 @@ int posXE(char M[][10][3]){
     while(i < 10){
         int j = 0;
         while(j < 10){
-                if(M[i][j][0] == 'E'){
+                if(M[i][j][0] == 'P' && M[i][j][1] == 'E'){
                     return j;
                 }
             j++;
@@ -33,36 +33,36 @@ int posXE(char M[][10][3]){
     return -1;
 }
 
-int posYS(char M[][10][3]){
-    int i= 0;
-    while(i < 19){
-        int j = 0;
-        while(j < 10){
-                if(M[i][j][0] == 'S'){
-                    return i;
-                }
-            j++;
-        }
-        i++;
-    }
-    return -1;
-}
+// int posYS(char M[][10][3]){
+//     int i= 0;
+//     while(i < 19){
+//         int j = 0;
+//         while(j < 10){
+//                 if(M[i][j][0] == 'S'){
+//                     return i;
+//                 }
+//             j++;
+//         }
+//         i++;
+//     }
+//     return -1;
+// }
 
 
-int posXS(char M[][10][3]){
-    int i= 0;
-    while(i < 10){
-        int j = 0;
-        while(j < 10){
-                if(M[i][j][0] == 'S'){
-                    return j;
-                }
-            j++;
-        }
-        i++;
-    }
-    return -1;
-}
+// int posXS(char M[][10][3]){
+//     int i= 0;
+//     while(i < 10){
+//         int j = 0;
+//         while(j < 10){
+//                 if(M[i][j][0] == 'S'){
+//                     return j;
+//                 }
+//             j++;
+//         }
+//         i++;
+//     }
+//     return -1;
+// }
 
 int mov[4][2] = {{-1, 0},{0, 1},{1, 0},{0, -1}};
 
@@ -76,34 +76,39 @@ mov[4][2] =
 }
 */
 
-bool valido(int* fila, int posY, int posX, char M[][10][3]){
-    // int movX = fila[1];
-    // int movY = fila[0];
-
-    // bool b = false;
-
-    // if(!((((((movX + posX < 0 || movX + posX > 9) || (movY + posY < 0 || movY + posY > 9) || M[movY + posY][movX + posX][0] == '*') || M[movY + posY][movX + posX][0] == 'U') || M[movY + posY][movX + posX][0] == 'R') || M[movY + posY][movX + posX][0] == 'D') || M[movY + posY][movX + posX][0] == 'L')){
-    //     b = true;
-    // }
-
-    // return b;
+bool valido(int* fila, int posY, int posX, char M[][10][3], int& enemy_counter){
     
     int movY = fila[0];
     int movX = fila[1];
 
+// M[posY + movY][posX + movX][0] == 'G'
+
+    bool b = false;
+
     // Corregir las condiciones para validar la celda
     if (!(posY + movY < 0 || posY + movY >= 10 || posX + movX < 0 || posX + movX >= 10 ||
-          M[posY + movY][posX + movX][0] == '*' ||
-          M[posY + movY][posX + movX][0] == 'U' ||
-          M[posY + movY][posX + movX][0] == 'R' ||
-          M[posY + movY][posX + movX][0] == 'D' ||
-          M[posY + movY][posX + movX][0] == 'L')) {
-        return true;
-    }
+            M[posY + movY][posX + movX][0] == '*' ||
+            M[posY + movY][posX + movX][0] == 'U' ||
+            M[posY + movY][posX + movX][0] == 'R' ||
+            M[posY + movY][posX + movX][0] == 'D' ||
+            M[posY + movY][posX + movX][0] == 'L' )) {  
+                // casos normales, donde no son enemigos y solo se compara si se está dentro de la matriz o las direcciones tomadas
+                
+                b = true;
 
-    return false;
+    }else if(M[posY + movY][posX + movX][0] == 'O' || M[posY + movY][posX + movX][0] == 'M'){
+            // caso cuando es un enemigo transitable
+        
+        // enemy_counter++;
+        // M[posY + movY][posX + movX][0] = '.';
+        b = true;       
 
-} // funcion validar → asegurando que la celda es valida para cruzar
+    } 
+    // cout << "enemy counter: " << enemy_counter << endl;
+
+    return b;
+
+} // funcion validar → asegurando que la celda es valida para cruzar → más adelante implementarse con combate
 
 void marcar(char M[][10][3], char m, int posX, int posY){
 
@@ -118,7 +123,7 @@ void printMatriz(char M[][10][3]){
     while(i < 10){
         int j = 0;
         while(j < 10){
-            cout << M[i][j][0] << " ";
+            cout << M[i][j][0] << " " << M[i][j][1] << " ";
             j++;
         }
         cout << endl;
@@ -126,8 +131,8 @@ void printMatriz(char M[][10][3]){
     }
 }
 
-void backtracking(char M[][10][3], int posY, int posX, bool& b){
-    if(M[posY][posX][0] == 'S'){
+void backtracking(char M[][10][3], int posY, int posX, bool& b, int& enemy_counter){
+    if(M[posY][posX][0] == 'P' && M[posY][posX][1] == 'S'){
         b = true;
         cout << "Salida!" << endl;
         printMatriz(M);
@@ -136,7 +141,7 @@ void backtracking(char M[][10][3], int posY, int posX, bool& b){
 
     int i = 0;
     while(i < 4){
-        if(valido(mov[i], posY, posX, M)){      // si es válido el movimiento nos movemos en la matriz en esa direccion
+        if(valido(mov[i], posY, posX, M, enemy_counter)){      // si es válido el movimiento nos movemos en la matriz en esa direccion
             char marca;
             if(mov[i][0] == -1 && mov[i][1] == 0){
                 marca = 'U';    // si el movimiento en ese momento es arriba
@@ -154,7 +159,14 @@ void backtracking(char M[][10][3], int posY, int posX, bool& b){
 
             marcar(M, marca, posX, posY);   // marcamos esa celda de la matriz, la celda donde estamos indicamos la direccion que tomamos
 
-            backtracking(M, posY + movF, posX + movC, b);  // ejecutamos llamada recursiva de backtracking
+            if(M[posY + movF][posX + movC][0] == 'M' || M[posY + movF][posX + movC][0] == 'O' || M[posY + movF][posX + movC][0] == 'G'){
+                enemy_counter++;
+                cout << "killed enemy!"<<endl; 
+            }   // si llega a conseguirse a algún enemigo aumenta el contador de enemigos encontrados, que sería lo mismo a enemigos peleados
+
+            // if(posY == 3 && posX == 6) cout << "CORNER " << endl;
+
+            backtracking(M, posY + movF, posX + movC, b, enemy_counter);  // ejecutamos llamada recursiva de backtracking
             if(b == true){
                 break;
             }   // cuando lleguemos a la solución detenemos todos los ciclos para finalizar las llamadas recursivas
@@ -171,6 +183,23 @@ void backtracking(char M[][10][3], int posY, int posX, bool& b){
  // si ninguna opción fue correcta y tuvimos que regresarnos
 }
 
+int enemies(char M[][10][3], int f, int c){
+    int count = 0;
+    int i = 0;
+    while(i < f){
+        int j = 0;
+        while(j < c){
+            if(M[i][j][0] == 'O' || M[i][j][0] == 'G' || M[i][j][0] == 'M'){
+                count++;
+            }
+            j++;
+        }
+        i++;
+    }
+
+    return count;
+}
+
 int main(){
     char M[10][10][3];
 
@@ -178,6 +207,14 @@ int main(){
     char camino[3] = {'.', ' ', ' '};
     char entrada[3] = {'E', ' ', ' '};
     char salida[3] = {'S', ' ', ' '};
+
+    for(int i = 0; i < 10; i++){
+        for(int j = 0; j < 10; j++){
+            for(int k = 0; k < 3; k++){
+                M[i][j][k] = ' ';
+            }
+        }
+    }   // llenado de matriz
 
     for(int i = 0; i < 10; i++){
         M[0][i][0] = '*';
@@ -272,14 +309,46 @@ int main(){
     M[8][7][0] = '.';
     M[8][8][0] = '.';
 
-    M[5][0][0] = 'E';
-    M[8][9][0] = 'S';
+    M[5][0][0] = '*';
+
+    M[0][3][0] = 'P';
+    M[0][3][1] = 'E';
+
+    M[8][9][0] = '*';
+    M[7][9][0] = 'P';    
+    M[7][9][1] = 'S';
+    M[7][8][0] = '.';
 
     // Hasta aquí la matriz
 
+    //Introducimos un enemigo
+    M[2][3][0] = 'O';
+    M[7][2][0] = 'M';
+    M[2][5][0] = 'G';
+  
+    M[0][9][0] = 'G';       
+
+    /*    
+        ATENCIÓN
+
+    
+     M[0][9][0] = 'G';   // cambiamos la posición del gigante
+
+     ahora tapamos la salida
+     M[8][8][0] = '*';
+
+
+        ATENCIÓN 
+    */  
+
+    
+    //preguntamos cuantos enemigos hay:
+    int e = enemies(M, 10, 10);
+    cout << "enemies? " << e << endl;
+
     for(int i = 0; i < 10; i++){
         for(int j = 0; j < 10; j++){
-            cout << M[i][j][0] << ' ';
+            cout << M[i][j][0] << ' ' << M[i][j][1] << ' ';
         }
         cout << endl;
     } 
@@ -290,8 +359,23 @@ int main(){
     int posyE = posYE(M);
 
     bool b = false;
+    int eCounter = 0;
 
-    backtracking(M, posyE, posxE, b);
+    backtracking(M, posyE, posxE, b, eCounter);
+
+    cout << "dead enemies: " << eCounter << endl;
+
+    cout << "there's ";
+
+    
+    if(b && (e == eCounter)){
+        cout << "YOU GOT THE GLORY" << endl;
+    }else if(b){
+        cout << "YOU SURVIVE";
+    } else {
+        cout << "YOU DIE";
+    }
+
 
     // cout << "Position in (x,y) of the Entrance: " << "( "<< posXE(M) << " , " << posYE(M) << " )" << endl;
     // cout << "Position in (x,y) of the Exit: " << "( "<< posXS(M) << " , " << posYS(M) << " )" << endl; 
