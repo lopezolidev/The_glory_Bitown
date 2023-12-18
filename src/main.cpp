@@ -4,7 +4,6 @@ using namespace std;
 class PJ
 {
 public:
-    bool trans = false;
     int vit = 0;
     bool isDead()
     {
@@ -173,31 +172,17 @@ player dataEntry(){
 
     p.type = characterType();
 
-    // cout << "Vitality of character: " << p.vit << endl;
-    // cout << "Type of character: ";
-    // if(p.type){
-    //     cout << "Arquero";
-    // } else {
-    //     cout << "Luchador";
-    // }
-    // cout << endl;   // LIMPIAR
-
     return p;
 }
 // función para ingresar los datos del jugador y regresando al player
 
 int dungeonsQuant(){
     int q = 0;
-
     cin >> q;
-
     if(q < 1){
 
         cin >> q;
     }
-
-    // cout << "dungeons quantity: " << q << endl;
-
     return q;
 
 } 
@@ -334,7 +319,7 @@ int posYE_XE(char*** M, int filas, int columnas, char L){
     }
     return -1;
 }
-// retorna la posición en filas o columnas del Portal de Entrada
+// retorna la posición en filas o columnas del Portal de Entrada según si el caracter enviado es 'F' o 'C'
 
 int howManyEnemies(char*** M, int rows, int columns){
     int count = 0;
@@ -552,15 +537,10 @@ void backtracking(char***& M, player& p, int vit, int posY, int posX, bool& esca
 
             marcar(M, marca, ' ', ' ', posX, posY);   // marcamos esa celda de la matriz, la celda donde estamos indicamos la direccion que tomamos
 
-            // cout << endl;
-            // printData(M, rows, columns);
-            // cout << endl;   // imprimimos antes de los pasos recursivos
-
             backtracking(M, p, vit, posY + movF, posX + movC, escape, enemy_counter, totalEnemies, rows, columns);  // ejecutamos llamada recursiva de backtracking
 
             marcar(M, elemento, elemento_2, elemento_3, posX, posY);    // regresamos el movimiento anterior
 
-            // Comenta estas líneas si no necesitas ver los pasos intermedios
         }
         i++;
     }
@@ -602,6 +582,7 @@ void deleteMatrix(char***& M, int rows, int cols){
     }
     delete[] M;
 }
+// función que se encarga de eliminar la matriz que ocupa espacio en memoria, así podemos crear múltiples matrices
 
 void worldCreator(player p, int vit){
     int rows = 0, cols = 0;
@@ -625,8 +606,6 @@ void game(){
     int k = 0;
     int vit = p.vit; // variable auxiliar que guarda la vitalidad con la que el jugador entró por primera vez al conjunto de mazmorras
     while(k < q){
-
-        // p.vit = vit; // haciendo "reset" de la vida del jugador
 
         worldCreator(p, vit);
         k++;

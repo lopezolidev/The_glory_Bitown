@@ -1,0 +1,19 @@
+Context cleared
+
+Hello chat gpt, I need a map made out of characters of 10000 cells, that is 100 rows by 100 columns. This map will be contained with walls ( * ), or giants ( GX ), the 'X' in Giants stands for their life points, which vary from 20 to 35. Also, you will include free roads wich are represented by dots ( . ). These are the only possible cells that can be crossed.
+The enemies are giants ( GX ), Orcs ( OX ) their life points go from 10 to 20, and Slimes ( SX ) their life points vary form 1 to 5. The Giants count as walls, the other two don't.
+
+Place an Entry Portal ( PE ) and an exit Portal ( PS ) in the borders of the map.
+
+The cells are conformed this way:
+' * ' → one cell
+' . ' → one cell
+' GX ' → one cell (reminder: Giants life goes from 20 to 35, that would be in example as: ' G25 ')
+' OX ' → one cell (reminder: Orcs life goes from 10 to 20, that would be in example as: ' O15 ')
+' SX ' → one cell (reminder: Slimes life goes from 1 to 5, that would be in example as: ' S5 ')
+' PE ' → one cell (reminder: this is the entry portal, placed in some cell at the border of the map)
+' PS ' → one cell (reminder: this is the exit portal, placed in some cell at the border of the map)
+
+The rest of the cells that are not enemies (' GX ', ' OX ', ' SX ') nor walls ( ' * ' ), fill them with roads ( ' . ' ). Remember that are 100 rows times 100 columns, for a total of 10000 cells.
+
+Please do them in characters.
