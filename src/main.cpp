@@ -133,88 +133,11 @@ void initializeAttacks(player &p)
 } // esta funcion inicializa los ataques del luchador o aquero , para cada vez que inicie una partida o logre matar a un enemigo
 // esta función resetea los parámetros de la matriz de ataques y cooldowns
 
-// funcion de pelea
-bool fight(player &p, int v, char t)
-    {
-        // reiniciar ataques
-        initializeAttacks(p);
-        
-        // crear enemigo
-        enemy monstruo(v, t); 
-
-        bool b = false;
-
-        // ciclos de  pelea
-        int turno =1;
-        while (p.vit > 0 && monstruo.vit > 0)
-        {
-            // ciclo del player
-    //cout<<"turno - "<<turno<<endl;
-            for (int i = 0; i < 4; i++)
-            {
-                if (p.attack[1][i] == 0)
-                {
-    //  cout<<"vida del monstruo ant: "<<monstruo.vit<<endl;
-                    monstruo.vit -= p.attack[0][i];
-                    p.attack[1][i] = p.attack[1][i] + p.attack[2][i]+1;
-                    p.attack[3][i] = 1;
-        // cout<<"vida del monstruo des: "<<monstruo.vit<<endl;
-
-                    break;
-                }
-            }
-            if (monstruo.vit > 0)
-            {
-                // ciclo del enemy
-                for (int j = 0; j < 2; j++)
-                {
-                
-                    if (monstruo.attack[1][j] == 0)
-                    {
-                        p.vit -= monstruo.attack[0][j];
-                        monstruo.attack[1][j] = monstruo.attack[1][j] + monstruo.attack[2][j]+1;
-                        monstruo.attack[3][j] = 1;
-                        break;
-                    }
-                }
-            }
-            // ciclo para restar cooldowns
-            for (int k = 0; k < 4; k++)
-            {
-                if (p.attack[3][k] == 1)
-                {   
-                    p.attack[1][k]--; // p.attack[1][k]-1;
-                    if (p.attack[1][k] == 0)
-                    {
-                        p.attack[3][k] == 0;
-                    }
-                }
-                if (monstruo.attack[3][k] == 1)
-                {
-                    monstruo.attack[1][k]--; // monstruo.attack[1][k]-1;
-                    if (monstruo.attack[1][k] == 0)
-                    {
-                        monstruo.attack[3][k] == 0;
-                    }
-                }
-            }turno++;
-        }
-
-
-        if (p.vit > 0 && monstruo.type != 'G'){
-                b = true;
-        }   // solo podemos cruzar una celda si nuestra vida es > 0 y el enemigo no es un gigante
-        
-        return b;
-}
-// solo si el jugador sobrevive y el enemigo no es un gigante, la pelea es exitosa es decir retornas verdadero
-
 int vitalityEntry(){
-    cout << "Insert vitality" << endl;
+
     int v = 0;
     cin >> v;
     while(v < 1){
-        cout << "invalid vitality: " << endl;
         cin >> v;
     }
     // cout << "vitality: " << v << endl;
@@ -225,8 +148,6 @@ int vitalityEntry(){
 bool characterType(){
     char c, d; //solo 2 caracteres serán nuestro elementos de lectura
     bool b; // el booleano de tipo para asignarlo al aventurero
-
-    cout << "insert type: " << endl;
 
     int i = 0;
     while(i < 1){
@@ -252,14 +173,14 @@ player dataEntry(){
 
     p.type = characterType();
 
-    cout << "Vitality of character: " << p.vit << endl;
-    cout << "Type of character: ";
-    if(p.type){
-        cout << "Arquero";
-    } else {
-        cout << "Luchador";
-    }
-    cout << endl;   // LIMPIAR
+    // cout << "Vitality of character: " << p.vit << endl;
+    // cout << "Type of character: ";
+    // if(p.type){
+    //     cout << "Arquero";
+    // } else {
+    //     cout << "Luchador";
+    // }
+    // cout << endl;   // LIMPIAR
 
     return p;
 }
@@ -268,16 +189,14 @@ player dataEntry(){
 int dungeonsQuant(){
     int q = 0;
 
-    cout << "Insert dungeons quantity" << endl;
-
     cin >> q;
 
     if(q < 1){
-        cout << "Invalid quantity." << endl;
+
         cin >> q;
     }
 
-    cout << "dungeons quantity: " << q << endl;
+    // cout << "dungeons quantity: " << q << endl;
 
     return q;
 
@@ -435,18 +354,90 @@ int howManyEnemies(char*** M, int rows, int columns){
 }
 // esta función nos retorna el número total de enemigos en la matriz
 
+// funcion de pelea
+bool fight(player &p, int v, char t)
+    {
+        // reiniciar ataques
+        initializeAttacks(p);
+        
+        // crear enemigo
+        enemy monstruo(v, t); 
+
+        bool b = false;
+
+        // ciclos de  pelea
+        int turno =1;
+        while (p.vit > 0 && monstruo.vit > 0)
+        {
+            // ciclo del player
+    //cout<<"turno - "<<turno<<endl;
+            for (int i = 0; i < 4; i++)
+            {
+                if (p.attack[1][i] == 0)
+                {
+    //  cout<<"vida del monstruo ant: "<<monstruo.vit<<endl;
+                    monstruo.vit -= p.attack[0][i];
+                    p.attack[1][i] = p.attack[1][i] + p.attack[2][i]+1;
+                    p.attack[3][i] = 1;
+        // cout<<"vida del monstruo des: "<<monstruo.vit<<endl;
+
+                    break;
+                }
+            }
+            if (monstruo.vit > 0)
+            {
+                // ciclo del enemy
+                for (int j = 0; j < 2; j++)
+                {
+                
+                    if (monstruo.attack[1][j] == 0)
+                    {
+                        p.vit -= monstruo.attack[0][j];
+                        monstruo.attack[1][j] = monstruo.attack[1][j] + monstruo.attack[2][j]+1;
+                        monstruo.attack[3][j] = 1;
+                        break;
+                    }
+                }
+            }
+            // ciclo para restar cooldowns
+            for (int k = 0; k < 4; k++)
+            {
+                if (p.attack[3][k] == 1)
+                {   
+                    p.attack[1][k]--; // p.attack[1][k]-1;
+                    if (p.attack[1][k] == 0)
+                    {
+                        p.attack[3][k] == 0;
+                    }
+                }
+                if (monstruo.attack[3][k] == 1)
+                {
+                    monstruo.attack[1][k]--; // monstruo.attack[1][k]-1;
+                    if (monstruo.attack[1][k] == 0)
+                    {
+                        monstruo.attack[3][k] == 0;
+                    }
+                }
+            }turno++;
+        }
 
 
+        if (p.vit > 0){
+                b = true;
+        }   // solo podemos cruzar una celda si nuestra vida es > 0
 
+        return b;
+}
+// solo si el jugador sobrevive, la pelea es exitosa es decir retornas verdadero
 
+void marcar(char***& M, char m_1, char m_2, char m_3, int posX, int posY){
 
-
-
-
-
-
-
-
+    M[posY][posX][0] = m_1;
+    // Asegurarse de limpiar las posiciones [1] y [2]
+    M[posY][posX][1] = m_2;
+    M[posY][posX][2] = m_3;
+}   
+// marcando la celda con el caracter del movimiento que hicimos o deshicimos
 
 
 // WORK IN PROGRESS
@@ -465,29 +456,82 @@ mov[4][2] =
 
 Matriz de movimientos
 */
+bool validar(int* fila_mov, int posY, int posX, char***& M, int& enemy_counter, player& p, int vit, int rows, int cols){
+    bool b_1 = false;
+    bool b_2 = false;
 
-bool celda_valida(int* fila_mov, int posY, int posX, char***& M, int& enemy_counter){
+    int movY = fila_mov[0]; // movmiento que haremos en filas
+    int movX = fila_mov[1]; // movmiento que haremos en columnas
+    
+    char enemy = ' ';   // caracter enemigo
+    int vit_e = 0; // vitalidad por defecto del enemigo
 
-}
+    if(     posY + movY >= 0 && posY + movY < rows  && 
+            posX + movX >= 0 && posX + movX < cols) 
+            {
+            
+                if(M[posY + movY][posX + movX][0] == '.' || 
+                M[posY + movY][posX + movX][0] == 'P' && M[posY + movY][posX + movX][1] == 'S'  ||
+                p.type && (M[posY + movY][posX + movX][0] == 'A' && M[posY + movY][posX + movX][1] == 'R')  ||
+                !p.type && (M[posY + movY][posX + movX][0] == 'P' && M[posY + movY][posX + movX][1] == 'A')){
+                    b_1 = true;
+                    b_2 = true;
+                } else if(M[posY + movY][posX + movX][0] == 'S' || M[posY + movY][posX + movX][0] == 'O' || M[posY + movY][posX + movX][0] == 'G'){
+                    char enemy = M[posY + movY][posX + movX][0];
+                    int vit_e = 0;
+                    int vit_e_1 = 0;
+                    int vit_e_2 = 0;
+                    if(enemy == 'S'){   // if it's a slime
+                        vit_e = M[posY + movY][posX + movX][1] - '0';
+                    } else {    // Si se trata de un orco o un gigante
+                        vit_e_1 = M[posY + movY][posX + movX][1] - '0';
+                        vit_e_2 = M[posY + movY][posX + movX][2] - '0';
+                        vit_e = vit_e_1 *10 + vit_e_2; 
+                    }
+                    b_1 = true;
 
-void marcar(char***& M, char m, int posX, int posY){
+                    bool f = fight(p, vit_e, enemy);    // guardamos en un booleano la victoria de combate
 
-    M[posY][posX][0] = m;
-    // Asegurarse de limpiar las posiciones [1] y [2]
-    M[posY][posX][1] = ' ';
-    M[posY][posX][2] = ' ';
-}   // marcando la celda con el caracter del movimiento que hicimos o deshicimos
 
-bool backtracking(char***& M, int posY, int posX, bool& escape, int& enemy_counter, int rows, int columns){
+                    if(f){  // si el combate resulta exitoso aumentamos el contador de enemigos derrotados
+                        enemy_counter++;
+                        if(enemy != 'G') {      // si el enemigo derrotado no fue un gigante ubicamos un punto en el lugar para no combatir más de 1 vez contra el mismo enemigo
+                            b_2 = true;
+                            M[posY + movY][posX + movX][0] = '.';
+                            M[posY + movY][posX + movX][1] = ' ';
+                            M[posY + movY][posX + movX][2] = ' ';
+                        } else {
+                            b_2 = false;
+                            M[posY + movY][posX + movX][0] = '*';
+                            M[posY + movY][posX + movX][1] = ' ';
+                            M[posY + movY][posX + movX][2] = ' ';
+                        }   // al ser el enemigo derrotado un gigante colocamos un asterisco, simbolizando una pared
+                    } else {
+                        p.vit = vit;
+                    } 
+                }
+
+            }
+
+    return b_1 && b_2 ;
+} 
+// veificador de celda, incluye el combate para garantizar que la celda es válida. Además altera la celda del combate exitoso para garantizar no pelear con el mismo enemigo más de una vez
+
+void backtracking(char***& M, player& p, int vit, int posY, int posX, bool& escape, int& enemy_counter, int totalEnemies, int rows, int columns){
     if(M[posY][posX][0] == 'P' && M[posY][posX][1] == 'S'){
             escape = true;
-            cout << "Salida!" << endl;
-            printData(M, rows, columns);
-            return escape;
+            // cout << "Salida!" << endl;
+            // printData(M, rows, columns);
+            return;
         }   // si las coordenadas actuales encajan con la celda de salida es que llegamos a la salida
+
     int i = 0;
     while(i < 4){
-        if(celda_valida(mov[i], posY, posX, M, enemy_counter)){      // si es válido el movimiento nos movemos en la matriz en esa direccion
+        if(escape == true && enemy_counter == totalEnemies){
+            break;
+        }   // cuando logramos matar a todos los enemigos en caso de y que hayamos llegado a la salida
+        if(validar(mov[i], posY, posX, M, enemy_counter, p, vit, rows, columns)){      // si es válido el movimiento nos movemos en la matriz en esa direccion
+
             char marca;
             if(mov[i][0] == -1 && mov[i][1] == 0){
                 marca = 'U';    // si el movimiento en ese momento es arriba
@@ -500,85 +544,78 @@ bool backtracking(char***& M, int posY, int posX, bool& escape, int& enemy_count
             }   // según la dirección, el caracter marca guardará la Letra del movimiento que hicimos
 
             char elemento = M[posY][posX][0];   // guardamos caracter de elemento previo por si el movimiento siguiente es inválido
+            char elemento_2 = M[posY][posX][1];
+            char elemento_3 = M[posY][posX][2]; // además de cualquier otra cosa que hubiera en dicha celda
+            
             int movF = mov[i][0];   // guardamos el valor de la coordenada en Y
             int movC = mov[i][1];   // guardamos el valor de la coordenada en X
 
-            marcar(M, marca, posX, posY);   // marcamos esa celda de la matriz, la celda donde estamos indicamos la direccion que tomamos
+            marcar(M, marca, ' ', ' ', posX, posY);   // marcamos esa celda de la matriz, la celda donde estamos indicamos la direccion que tomamos
 
-            cout << endl;
-            printData(M, rows, columns);
-            cout << endl;   // imprimimos antes de los pasos recursivos
+            // cout << endl;
+            // printData(M, rows, columns);
+            // cout << endl;   // imprimimos antes de los pasos recursivos
 
-            if(M[posY + movF][posX + movC][0] == 'M' || M[posY + movF][posX + movC][0] == 'O' || M[posY + movF][posX + movC][0] == 'G'){
-                // enemy_counter++;
-                // cout << "killed enemy!"<<endl; 
-            }   // si llega a conseguirse a algún enemigo aumenta el contador de enemigos encontrados, que sería lo mismo a enemigos peleados
+            backtracking(M, p, vit, posY + movF, posX + movC, escape, enemy_counter, totalEnemies, rows, columns);  // ejecutamos llamada recursiva de backtracking
 
-            // if(posY == 3 && posX == 6) cout << "CORNER " << endl;
+            marcar(M, elemento, elemento_2, elemento_3, posX, posY);    // regresamos el movimiento anterior
 
-            backtracking(M, posY + movF, posX + movC, escape, enemy_counter, rows, columns);  // ejecutamos llamada recursiva de backtracking
-            if(escape == true){
-                break;
-            }   // cuando lleguemos a la solución detenemos todos los ciclos para finalizar las llamadas recursivas
-
-            marcar(M, elemento, posX, posY);    // regresamos el movimiento anterior
-            
             // Comenta estas líneas si no necesitas ver los pasos intermedios
         }
         i++;
     }
 }
-
-// WORK IN PROGRESS
-
+// función de backtracking. Elemento principal para toda la partida, donde se realizarán los pasos recursivos y se validan las celdas donde se busca transitar. Altera los parámetros por referencia del jugador, la matriz y el contador de enemigos.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-void partida(char***& M, player& p, int rows, int cols){
+void partida(char***& M, player& p, int vit, int rows, int cols){
     int fila_E = posYE_XE(M, rows, cols, 'F');
     int columna_E = posYE_XE(M, rows, cols, 'C');
 
     bool escape = false;
     int total_enemies = 0;
-
-    cout << "Entrance row " << fila_E << endl;
-    cout << "Entrance column " << columna_E << endl;
  
     total_enemies = howManyEnemies(M, rows, cols);
-    cout << "How many enemies are here? " << total_enemies << endl;
 
     int enemies_counter = 0;
 
+    backtracking(M, p, vit, fila_E, columna_E, escape, enemies_counter, total_enemies, rows, cols);
 
+    if(escape && (total_enemies == enemies_counter)){
+        cout << "YOU GET THE GLORY";
+    } else if(escape){
+        cout << "YOU SURVIVE";
+    } else {
+        cout << "YOU DIE";
+    }
+
+    cout << endl;
 
 }   // en esta función se hace una comparación del booleano que arroja el backtracking y la comparación entre los enemigos muertos y los totales, así se podrá implementar el mensaje final por pantalla de la mejor solución posible
 
-void worldCreator(player p){
+void deleteMatrix(char***& M, int rows, int cols){
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            delete[] M[i][j];
+        }
+        delete[] M[i];
+    }
+    delete[] M;
+}
+
+void worldCreator(player p, int vit){
     int rows = 0, cols = 0;
 
     cin >> rows >> cols;
 
-    cout << "rows: " << rows << ", cols: " << cols << endl;
-
     char*** myMatrix = nullptr; // declaramos la matriz como un puntero nulo, es decir que no apunta a ninguna dirección de memoria
     myMatrix = createMatrix(myMatrix, rows, cols);  // creamos la matriz dinámica retornando un puntero de punteros 
 
-    partida(myMatrix, p, rows, cols);  // en esta función enviamos la matriz y el jugador por referencia además de filas y columnas
+    partida(myMatrix, p, vit, rows, cols);  // en esta función enviamos la matriz y el jugador por referencia además de filas y columnas
     //jugamos 
 
-    printData(myMatrix, rows, cols);  // imprimimos la matriz
+    // printData(myMatrix, rows, cols);  // imprimimos la matriz
+    deleteMatrix(myMatrix, rows, cols);
 }   
 // esta función crea la matriz, la cual es utilizada función de 'partida' la cual es central para hacer el recorrido del laberinto, la peleas e imprimir los resultados por pantalla que se solicitan en el documento del proyecto
 
@@ -588,11 +625,10 @@ void game(){
     int k = 0;
     int vit = p.vit; // variable auxiliar que guarda la vitalidad con la que el jugador entró por primera vez al conjunto de mazmorras
     while(k < q){
-        cout << "dungeon N°: " << k + 1 << endl;
-       
-        p.vit = vit; // haciendo "reset" de la vida del jugador
 
-        worldCreator(p);
+        // p.vit = vit; // haciendo "reset" de la vida del jugador
+
+        worldCreator(p, vit);
         k++;
     }
 };

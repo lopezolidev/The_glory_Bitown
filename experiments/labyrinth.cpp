@@ -53,15 +53,10 @@ bool valido(int* fila, int posY, int posX, char M[][10][3], int& enemy_counter){
 
     bool b = false;
 
-    // if((posY + movY) == 7 && (posX + movX) == 8){
-    //     if(M[posY + movY][posX + movX][0] == 'G'){
-            
-    //         cout << "giant " << endl;
-    //         enemy_counter++;
-    //         cout << "enemy_counter " << enemy_counter << endl;
-    //     }
-    //     cout << "M[7][8][0] " << M[7][8][0] << endl;
-    // }
+    char enemy = ' ';
+    int vit_e = 0;
+    int vit_e_1 = 0;
+    int vit_e_2 = 0;
 
     // Corregir las condiciones para validar la celda
     if (!(posY + movY < 0 || posY + movY >= 10 || posX + movX < 0 || posX + movX >= 10 ||
@@ -75,31 +70,44 @@ bool valido(int* fila, int posY, int posX, char M[][10][3], int& enemy_counter){
                 b = true;
 
     }
-    if(M[posY + movY][posX + movX][0] == 'O' || M[posY + movY][posX + movX][0] == 'M'){
-            // caso cuando es un enemigo transitable
-        
-        enemy_counter++;
-        M[posY + movY][posX + movX][0] = '.';   // marcamos la matriz para no contar dos veces ese enemigo
-        b = true;       
-        cout << "enemy_counter " << enemy_counter << endl;
+    if(M[posY + movY][posX + movX][0] == 'O' || M[posY + movY][posX + movX][0] == 'S' ||  M[posY + movY][posX + movX][0] == 'G'){
+        enemy = M[posY + movY][posX + movX][0];
+        if(M[posY + movY][posX + movX][0] == 'S'){
+            vit_e = M[posY + movY][posX + movX][1] - '0';   // casteamos la vida del monstruo si este es Slime
+            enemy_counter++;
+        } else{
+            vit_e_1 = M[posY + movY][posX + movX][1] - '0';     // casteamos los caracteres de vida de nuestros monstruos
+            vit_e_2 = M[posY + movY][posX + movX][2] - '0';
+            vit_e = vit_e_1*10 + vit_e_2;   // vida completa del monstruo → Orco o Gigante
+            enemy_counter++;
+        }
+            cout << "enemy: " << enemy << " with vitality: " << vit_e << endl;
 
-    }
-    if( M[posY + movY][posX + movX][0] == 'G'){
-        enemy_counter++;
-        M[posY + movY][posX + movX][0] = '*';   // lo mismo para el caso del gigante
+    }   // no se ejecutará una vez hayamos peleado y sobrevivido contra el enemigo
+
+    
+
+    if(M[posY + movY][posX + movX][0] == 'O' || M[posY + movY][posX + movX][0] == 'S'){
+        M[posY + movY][posX + movX][0] = '.';
+        M[posY + movY][posX + movX][1] = ' ';
+        M[posY + movY][posX + movX][2] = ' ';
+    } else if(M[posY + movY][posX + movX][0] == 'G'){
+        M[posY + movY][posX + movX][0] = '*';
+        M[posY + movY][posX + movX][1] = ' ';
+        M[posY + movY][posX + movX][2] = ' ';
         b = false;
-        cout << "enemy_counter " << enemy_counter << endl;
     }
+
     return b;
 
 } // funcion validar → asegurando que la celda es valida para cruzar → más adelante implementarse con combate
 
-void marcar(char M[][10][3], char m, int posX, int posY){
+void marcar(char M[][10][3], char m, char m_2, char m_3, int posX, int posY){
 
     M[posY][posX][0] = m;
     // Asegurarse de limpiar las posiciones [1] y [2]
-    M[posY][posX][1] = ' ';
-    M[posY][posX][2] = ' ';
+    M[posY][posX][1] = m_2;
+    M[posY][posX][2] = m_3;
 }   // marcando la celda con el caracter del movimiento que hicimos o deshicimos
 
 void printMatriz(char M[][10][3]){
@@ -107,7 +115,7 @@ void printMatriz(char M[][10][3]){
     while(i < 10){
         int j = 0;
         while(j < 10){
-            cout << M[i][j][0] << " " << M[i][j][1] << " ";
+            cout << M[i][j][0] << M[i][j][1] << M[i][j][2] << " ";
             j++;
         }
         cout << endl;
@@ -138,28 +146,24 @@ void backtracking(char M[][10][3], int posY, int posX, bool& b, int& enemy_count
             }   // según la dirección, el caracter marca guardará la Letra del movimiento que hicimos
 
             char elemento = M[posY][posX][0];   // guardamos caracter de elemento previo por si el movimiento siguiente es inválido
+            char elemento_2 = M[posY][posX][1];
+            char elemento_3 = M[posY][posX][2];
+
             int movF = mov[i][0];   // guardamos el valor de la coordenada en Y
             int movC = mov[i][1];   // guardamos el valor de la coordenada en X
 
-            marcar(M, marca, posX, posY);   // marcamos esa celda de la matriz, la celda donde estamos indicamos la direccion que tomamos
+            marcar(M, marca, ' ', ' ', posX, posY);   // marcamos esa celda de la matriz, la celda donde estamos indicamos la direccion que tomamos
 
             cout << endl;
             printMatriz(M);
             cout << endl;   // imprimimos antes de los pasos recursivos
-
-            if(M[posY + movF][posX + movC][0] == 'M' || M[posY + movF][posX + movC][0] == 'O' || M[posY + movF][posX + movC][0] == 'G'){
-                // enemy_counter++;
-                // cout << "killed enemy!"<<endl; 
-            }   // si llega a conseguirse a algún enemigo aumenta el contador de enemigos encontrados, que sería lo mismo a enemigos peleados
-
-            // if(posY == 3 && posX == 6) cout << "CORNER " << endl;
 
             backtracking(M, posY + movF, posX + movC, b, enemy_counter);  // ejecutamos llamada recursiva de backtracking
             if(b == true){
                 break;
             }   // cuando lleguemos a la solución detenemos todos los ciclos para finalizar las llamadas recursivas
 
-            marcar(M, elemento, posX, posY);    // regresamos el movimiento anterior
+            marcar(M, elemento, elemento_2, elemento_3, posX, posY);    // regresamos el movimiento anterior
             
             // Comenta estas líneas si no necesitas ver los pasos intermedios
         }
@@ -174,7 +178,7 @@ int enemies(char M[][10][3], int f, int c){
     while(i < f){
         int j = 0;
         while(j < c){
-            if(M[i][j][0] == 'O' || M[i][j][0] == 'G' || M[i][j][0] == 'M'){
+            if(M[i][j][0] == 'O' || M[i][j][0] == 'G' || M[i][j][0] == 'S'){
                 count++;
             }
             j++;
@@ -308,10 +312,19 @@ int main(){
 
     //Introducimos un enemigo
     M[2][3][0] = 'O';
-    M[7][2][0] = 'M';
+    M[2][3][1] = '1';
+    M[2][3][2] = '2';
+
+    M[7][2][0] = 'S';
+    M[7][2][1] = '1';
+    
     M[2][5][0] = 'G';
-  
-    M[0][9][0] = 'G';       
+    M[2][5][1] = '3';
+    M[2][5][2] = '0';
+
+    M[0][9][0] = 'G';
+    M[0][9][1] = '2';    
+    M[0][9][2] = '5';           
 
     /*    
         ATENCIÓN
@@ -328,6 +341,8 @@ int main(){
 
     //tapando la salida con un gigante
     M[7][8][0] = 'G';
+    M[7][8][1] = '2';
+    M[7][8][2] = '8';
 
 
     

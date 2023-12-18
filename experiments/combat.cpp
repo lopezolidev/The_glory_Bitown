@@ -190,26 +190,27 @@ bool fight(player &p, int v, char t)
         }
 
 
-        if (p.vit > 0 && monstruo.type != 'G'){
+        if (p.vit > 0){
                 b = true;
-        }   // solo podemos cruzar una celda si nuestra vida es > 0 y el enemigo no es un gigante
+        }   // solo podemos cruzar una celda si nuestra vida es > 0
+        
+        // if(p.vit <= 0){
+        //     p.vit = vit;
+        // }
 
-        if(p.vit > 0){
-            cout << "Sobreviviste con " << p.vit << endl;
-        } else {
-            cout << "Moriste" << endl;
-        }
         return b;
-}   // solo si sobrevives la pelea es exitosa es decir retornas verdadero
+}
+// solo si el jugador sobrevive, la pelea es exitosa es decir retornas verdadero
+ // solo si sobrevives la pelea es exitosa es decir retornas verdadero
 
 int main()
 {
 
     bool b = false;
 
-    player p(10, b);
+    player p(20, b);
 
-    bool c = fight(p, 200, 'S');
+    bool c = fight(p, 90, 'O');
 
     if(c){
       cout<< "Celda válida "<< endl;
